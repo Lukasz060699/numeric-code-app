@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Codes;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -36,6 +37,10 @@ class CodeController extends Controller
      */
     public function store(Request $request)
     {
+        if(!Auth::check()) {
+            throw new \Exception('Nie jesteś zalogowany.');
+        }
+
         try{
             $userId = Auth::id(); //get user id
 
@@ -75,6 +80,9 @@ class CodeController extends Controller
      */
     public function destroy(Request $request)
     {
+        if(!Auth::check()) {
+            throw new \Exception('Nie jesteś zalogowany.');
+        }
         try{
             $codesToDelete = preg_split('/[,\r\n]+/', $request->input('codes'));
             $codesToDelete = array_map('trim', $codesToDelete);

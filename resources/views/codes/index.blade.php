@@ -17,11 +17,26 @@
                         @if($codes->isEmpty())
                             <p>Brak kodów w bazie danych.</p>
                         @else
-                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
-                                @foreach($codes as $code)
-                                    <li class="mb-2">{{ $code->code }} </li>
-                                @endforeach
-                            </ul>
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Code</th>
+                                <th scope="col">Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($codes as $code)
+                                <tr>
+                                <td>{{ $code->id }}</td>
+                                <td>{{ $code->user->email ? $code->user->name : 'N/A' }}</td>
+                                <td>{{ $code->code }}</td>
+                                <td>{{ $code->created_at }}</td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                            </table>
                         @endif
                     </div>
                 </div>

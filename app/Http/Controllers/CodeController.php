@@ -6,6 +6,8 @@ use App\Models\Codes;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Spatie\Backtrace\Backtrace;
+
 class CodeController extends Controller
 {
     /**
@@ -34,6 +36,8 @@ class CodeController extends Controller
     public function store(Request $request)
     {
         try{
+            $userId = Auth::id(); //get user id
+
             // form validation
             $request->validate([
                 'amount' => 'required|integer|min:1|max:10'
@@ -45,7 +49,7 @@ class CodeController extends Controller
             {
                 $randomCode = $this->generateUniqueCode($generatedCodes);
                 $generatedCodes[] = $randomCode;
-                Codes::create(['code' => $randomCode]);
+                Codes::create(['code' => $randomCode, 'user_id' => $userId]);
             }
 
             return redirect('/')->with('success', 'Kody zostały pomyślnie wygenerowane');

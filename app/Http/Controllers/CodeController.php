@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Codes;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 class CodeController extends Controller
 {
     /**
@@ -13,8 +14,8 @@ class CodeController extends Controller
      */
     public function index()
     {
-        $codes = Codes::all();
-        return view('codes.index'); // passing codes to the view
+        $codes = Codes::cursorPaginate(5);
+        return view('codes.index', compact('codes')); // passing codes to the view
     }
 
     /**
@@ -32,21 +33,26 @@ class CodeController extends Controller
      */
     public function store(Request $request)
     {
-        // form validation
-        $request->validate([
-            'amount' => 'required|integer|min:1|max:10'
-        ]);
+        try{
+            // form validation
+            $request->validate([
+                'amount' => 'required|integer|min:1|max:10'
+            ]);
 
-        //generate unique codes and saving to the database
-        $generatedCodes = [];
-        for($i = 0; $i< $request->input('amount'); $i++)
-        {
-            $randomCode = $this->generateUniqueCode($generatedCodes);
-            $generatedCodes[] = $randomCode;
-            Codes::create(['code' => $randomCode]);
+            //generate unique codes and saving to the database
+            $generatedCodes = [];
+            for($i = 0; $i< $request->input('amount'); $i++)
+            {
+                $randomCode = $this->generateUniqueCode($generatedCodes);
+                $generatedCodes[] = $randomCode;
+                Codes::create(['code' => $randomCode]);
+            }
+
+            return redirect('/')->with('success', 'Kody zostały pomyślnie wygenerowane');
+        } catch (\Exception $e) {
+            Log::error("Error in store method: " . $e->getMessage());
+            return back()->with('error', 'Wystąpił błąd podczas generowania kodów');
         }
-
-        return redirect('/codes')->with('success', 'Kody zostały pomyślnie wygenerowane');
     }
 
     /**
@@ -64,32 +70,50 @@ class CodeController extends Controller
      */
     public function destroy(Request $request)
     {
-        $codesToDelete = array_filter(array_map('trim', explode(',', $request->input('codes'))));
+        try{
+            $codesToDelete = preg_split('/[,\r\n]+/', $request->input('codes'));
+            $codesToDelete = array_map('trim', $codesToDelete);
+            $codesToDelete = array_filter($codesToDelete);
 
-        // get existing codes from database
-        $existingCodes = Codes::whereIn('code', $codesToDelete)->pluck('code')->toArray();
+            // get existing codes from database
+            $existingCodes = Codes::whereIn('code', $codesToDelete)->pluck('code')->toArray();
 
-        // check, which codes exist
-        $notFoundCodes = array_diff($codesToDelete, $existingCodes);
+            // check, which codes exist
+            $notFoundCodes = array_diff($codesToDelete, $existingCodes);
+            if(!empty($notFoundCodes))
+            {
+                return back()->with('warning', 'Nie znaleziono następujących kodów w bazie danych: ' . implode(', ', $notFoundCodes));
+            }
 
-        if(!empty($notFoundCodes))
-        {
-            return back()->with('warning', 'Nie znaleziono następujących kodów w baziee danych: ' . implode(', ', $notFoundCodes));
+            //delete codes from the database
+            Codes::whereIn('code', $codesToDelete)->delete();
+            return redirect('/')->with('success', 'Kody zostały pomyślnie usunięte');
+        } catch (\Exception $e) {
+            Log::error("Error in destroy method: " . $e->getMessage());
+            return back()->with('error', 'Wystąpił błąd podczas usuwania kodów');
         }
-
-        //delete codes from the database
-        Codes::whereIn('code', $codesToDelete)->delete();
-        return redirect('/codes')->with('success', 'Kody zostały pomyślnie usunięte');
     }
 
     // function generated unique code
     private function generateUniqueCode(array &$existingCodes): string
     {
-        do {
-            $randomCode = str_pad(rand(0, 9999999999), 10, '0', STR_PAD_LEFT);
-        } while (in_array($randomCode, $existingCodes) || Codes::where('code', $randomCode)->exists());
+        try{
+            $maxAttempts = 10; // max attempts to generate a unique code
 
-        return $randomCode;
+            for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+                $randomCode = str_pad(rand(0, 99999999), 10, '0', STR_PAD_LEFT);
+
+                if (!in_array($randomCode, $existingCodes) && !Codes::where('code', $randomCode)->exists()) {
+                    return $randomCode;
+                }
+            }
+
+            // if the loop reached the max attempts, throw an exception
+            throw new \RuntimeException('Nie udało się wygenerować unikalnego kodu po ' . $maxAttempts . ' próbach.');
+        } catch (\RuntimeException $e) {
+            Log::error("Error in generated UniqueCode method: " . $e->getMessage());
+            throw $e;
+        }
     }
 
 }

@@ -23,7 +23,7 @@ class CodeServiceProvider extends ServiceProvider
     {
         View::composer('codes.index', function ($view)
         {
-            $codes = Codes::all();
+            $codes = Codes::cursorPaginate(5);
             $view->with('codes', $codes);
         });
     }

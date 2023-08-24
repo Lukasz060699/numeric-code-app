@@ -30,6 +30,6 @@ class HomeController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/codes');
+        return redirect('/');
     }
 }

@@ -15,13 +15,13 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/codes', [CodeController::class, 'index'])->name('codes.index');
+Route::get('/', [CodeController::class, 'index'])->name('codes.index');
 
 Route::get('/codes/create', [CodeController::class, 'create'])->name('codes.create');
 Route::post('/codes', [CodeController::class, 'store'])->name('codes.store');
 
 Route::get('/codes/delete', [CodeController::class, 'delete'])->name('codes.delete');
-Route::delete('/codes/delete', [CodeController::class, 'destroy'])->name('codes.destroy');
+Route::delete('/codes', [CodeController::class, 'destroy'])->name('codes.destroy');
 
 Auth::routes();
 

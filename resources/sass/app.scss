@@ -8,13 +8,13 @@
 @import 'bootstrap/scss/bootstrap';
 
 .text-resizable {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Początkowa wielkość czcionki */
 
     @media (max-width: 768px) {
-        font-size: 1.2rem;
+      font-size: 1rem; /* Wielkość czcionki dla mniejszych ekranów */
     }
 
     @media (max-width: 576px) {
-        font-size: 1rem;
+      font-size: 1rem; /* Wielkość czcionki dla jeszcze mniejszych ekranów */
     }
-}
+  }

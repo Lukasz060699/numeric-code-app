@@ -10,6 +10,7 @@ use Spatie\Backtrace\Backtrace;
 
 class CodeController extends Controller
 {
+
     /**
      * Display a list of all codes
      *

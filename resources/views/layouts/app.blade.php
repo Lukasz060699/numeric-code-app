@@ -1,33 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code handling</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Fonts -->
+    <link rel="dns-prefetch" href="//fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+
+    <!-- Scripts -->
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Code handling</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('codes.index') }}">List of codes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('codes.create') }}">Create codes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('codes.delete') }}">Delete codes</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container mt-5">
-        @yield('content')
-    </div>
+    <div id="app">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+            <div class="container">
+                <a class="navbar-brand text-resizable" href="{{ route('codes.index') }}">
+                    Code handling
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav me-auto">
+
+                    </ul>
+
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav ms-auto text-resizable">
+                        <!-- Authentication Links -->
+                        @guest
+                            @if (Route::has('login'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                </li>
+                            @endif
+
+                            @if (Route::has('register'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                </li>
+                            @endif
+                        @else
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-resizable">
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Codes
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end text-resizable" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('codes.index') }}">
+                                        Show
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('codes.create') }}">
+                                        Create
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('codes.delete') }}">
+                                        Delete
+                                    </a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    {{ Auth::user()->name }}
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end text-resizable" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('custom-logout') }}">
+                                       Logout
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                        @endguest
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="py-4">
+            @yield('content')
+        </main>
+    </div>
 </body>
 </html>
-

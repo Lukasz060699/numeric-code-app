@@ -87,7 +87,7 @@ class CodeController extends Controller
     {
         do {
             $randomCode = str_pad(rand(0, 9999999999), 10, '0', STR_PAD_LEFT);
-        } while (in_array($randomCode, $existingCodes) || Codes::where('code', $randomCode)->exists);
+        } while (in_array($randomCode, $existingCodes) || Codes::where('code', $randomCode)->exists());
 
         return $randomCode;
     }

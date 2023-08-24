@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CodeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/codes', [CodeController::class, 'index'])->name('codes.index');
+
+Route::get('/codes/create', [CodeController::class, 'create'])->name('codes.create');
+Route::post('/codes', [CodeController::class, 'store'])->name('codes.store');
+
+Route::get('/codes/delete', [CodeController::class, 'delete'])->name('codes.delete');
+Route::delete('/codes/delete', [CodeController::class, 'destroy'])->name('codes.destroy');

@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Spatie\Backtrace\Backtrace;
-
 class CodeController extends Controller
 {
 
@@ -80,6 +79,7 @@ class CodeController extends Controller
      */
     public function destroy(Request $request)
     {
+
         if(!Auth::check()) {
             throw new \Exception('Nie jesteś zalogowany.');
         }
@@ -90,7 +90,6 @@ class CodeController extends Controller
 
             // get existing codes from database
             $existingCodes = Codes::whereIn('code', $codesToDelete)->pluck('code')->toArray();
-
             // check, which codes exist
             $notFoundCodes = array_diff($codesToDelete, $existingCodes);
             if(!empty($notFoundCodes))
@@ -100,15 +99,15 @@ class CodeController extends Controller
 
             //delete codes from the database
             Codes::whereIn('code', $codesToDelete)->delete();
+
             return redirect('/')->with('success', 'Kody zostały pomyślnie usunięte');
         } catch (\Exception $e) {
-            Log::error("Error in destroy method: " . $e->getMessage());
             return back()->with('error', 'Wystąpił błąd podczas usuwania kodów');
         }
     }
 
     // function generated unique code
-    private function generateUniqueCode(array &$existingCodes): string
+    protected function generateUniqueCode(array &$existingCodes): string
     {
         try{
             $maxAttempts = 10; // max attempts to generate a unique code

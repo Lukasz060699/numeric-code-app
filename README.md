@@ -1,3 +1,4 @@
+
 # Generowanie unikalnych kodów 
 
 ## Co jest potrzebne do uruchomienia
@@ -20,4 +21,5 @@ i usuwania nowych kodów.
 - Podgląd listy kodów - reprezentuje dane w postaci tabelki z takimi danymi jak: **Id kodu**, **Imię usera**, **Kod**, **Data dodania**. Została dodana paginacja (max 5 rekordów na stronie).
 - Dodawanie kodów - użytkownik wybiera w polu typu **number** ilość kodów, które mają zostać wygenerowane. Przy pojedynczym generowaniu można stworzyć od 1 do 10 kodów. Każdy kod jest unikalny. Po dodaniu kodu zostanie wyświetlony komunikat o pomyślnym wygenerowaniu kodów. 
 - Usuwanie kodów - użytkownik może usunąć kody poprzez wpisanie je w polu typu **textarea**, oddzielając je przecinkami i/lub od nowej linii. Po pomyślnym usunięciu, zostanie wygenerowany stosowny komunikat.  
+
 

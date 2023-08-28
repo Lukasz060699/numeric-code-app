@@ -7,10 +7,11 @@
 - Apache
 - MySQL
 - Composer
+- Node.js
 
 Należy sklonować lub pobrać projekt z repozytorium. Następnie pobrać zależności przy pomocy ```composer install```. 
-Należy zaimportować schemat bazy danych ```numeric-code-app.sql```. Baza powinna działać na porcie ```3306```. Skonfiguruj plik ```.env```.
-Wykonaj migracje ```php artisan migrate```. Uruchom serwer deweloperski ```php artisan serve```. 
+Należy zaimportować schemat bazy danych ```numeric-code-app.sql```. Baza powinna działać na porcie ```3306```. Skonfiguruj plik ```.env```, wygeneruj nowy klucz szyfrowania ```php artisan key:generate```.
+Wykonaj migracje ```php artisan migrate```. Wykonaj ```npm install```, a następnie ```npm run dev```. Uruchom serwer deweloperski ```php artisan serve```. 
 
 ## Opis aplikacji
 
